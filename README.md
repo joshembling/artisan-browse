@@ -28,7 +28,13 @@ You can install the package via composer:
 composer require joshembling/artisan-browse
 ```
 
-You can publish the config file with:
+Then run the package's install command:
+
+```bash
+php artisan artisan-browse:install
+```
+
+If you'd rather do it separately, you can publish the config file with:
 
 ```bash
 php artisan vendor:publish --tag="artisan-browse-config"
