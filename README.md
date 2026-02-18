@@ -63,6 +63,9 @@ Run the interactive browser:
 php artisan browse
 ```
 
+<img width="1119" height="501" alt="Screenshot 2026-02-18 at 23 25 18" src="https://github.com/user-attachments/assets/07e55d93-7e67-4fc2-9502-a971a02c913f" />
+
+
 Filter by namespace:
 
 ```bash
@@ -70,6 +73,9 @@ php artisan browse make
 ```
 
 This will show only commands starting with `make:`, like `make:model`, `make:controller`, etc.
+
+<img width="748" height="190" alt="Screenshot 2026-02-18 at 23 23 05" src="https://github.com/user-attachments/assets/274e2c03-baeb-461b-996d-294440f81d55" />
+
 
 ### Configuration
 
