@@ -1,4 +1,6 @@
-# An interactive terminal UI for browsing, searching, and executing Laravel Artisan commands.
+# 🔎 Artisan Browse
+
+## An interactive terminal UI for browsing, searching, and executing Laravel Artisan commands.
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/joshembling/artisan-browse.svg?style=flat-square)](https://packagist.org/packages/joshembling/artisan-browse)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/joshembling/artisan-browse/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/joshembling/artisan-browse/actions?query=workflow%3Arun-tests+branch%3Amain)
@@ -18,7 +20,6 @@ This is perfect for any devs who want immediate command discovery and execution 
 - **Command Preview** - See the exact command that will be executed before confirming
 - **Configurable Behavior** - Customise blacklists, scroll behavior, search options, and more
 - **Auto-Execute Option** - Skip confirmation and run commands immediately if desired
-
 ## Installation
 
 You can install the package via composer:
@@ -48,6 +49,11 @@ php artisan browse make
 ```
 
 This will show only commands starting with `make:`, like `make:model`, `make:controller`, etc.
+
+## Demo 
+
+![Artisan Browse Demo](assets/artisan_browse.gif)
+
 
 ### Configuration
 
