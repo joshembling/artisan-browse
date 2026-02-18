@@ -35,12 +35,12 @@ This is perfect for any devs who want immediate command discovery and execution 
 
 ## Features
 
-- **Interactive Command Search** - Searchable list of all available Artisan commands with descriptions
-- **Smart Filtering** - Filter by command namespace or search across command names and descriptions
-- **Interactive Arguments & Options** - Using Laravel Prompts, this guides you through required arguments and optional flags
-- **Command Preview** - See the exact command that will be executed before confirming
-- **Configurable Behavior** - Customise blacklists, scroll behavior, search options, and more
-- **Auto-Execute Option** - Skip confirmation and run commands immediately if desired
+- 🔍 **Interactive Command Search** - Searchable list of all available Artisan commands with descriptions
+- 🎚️ **Filtering** - Filter by command namespace or search across command names and descriptions
+- ⌨️ **Auto Arguments & Options** - Using Laravel Prompts, this guides you through required arguments and optional flags
+- 👁️ **Command Preview** - See the exact command that will be executed before confirming
+- 🛠️ **Configurable Behavior** - Customise blacklists, scroll behavior, search options, and more
+- ⚡ **Auto-Execute Option** - Skip confirmation and run commands immediately if desired
 
 ## Installation
 
