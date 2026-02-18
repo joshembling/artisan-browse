@@ -89,7 +89,7 @@ class ArtisanBrowseCommand extends Command
     /**
      * Show the interactive search prompt and return the selected command name.
      */
-    private function selectCommand(array $commandMap, ?string $namespaceFilter): ?string
+    private function selectCommand(array $commandMap, ?string $namespaceFilter): string
     {
         $searchDescriptions = config('artisan-browse.search_descriptions', true);
 
@@ -264,7 +264,7 @@ class ArtisanBrowseCommand extends Command
         if ($namespaceFilter) {
             $commands = array_filter(
                 $commands,
-                fn($command, $name) => Str::startsWith($name, $namespaceFilter),
+                fn($name) => Str::startsWith($name, $namespaceFilter),
                 ARRAY_FILTER_USE_KEY
             );
         }
