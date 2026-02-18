@@ -21,4 +21,7 @@ return [
 
     // Whether to search against command descriptions
     'search_descriptions' => true,
+
+    // Whether to automatically execute the command without showing the confirmation prompt
+    'auto_execute' => false,
 ];

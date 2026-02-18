@@ -236,6 +236,10 @@ class ArtisanBrowseCommand extends Command
             note("Running: php artisan {$preview}");
         }
 
+        if (config('artisan-browse.auto_execute', false)) {
+            return true;
+        }
+
         return confirm('Execute this command?', default: true);
     }
 
