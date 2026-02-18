@@ -5,15 +5,19 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/joshembling/artisan-browse/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/joshembling/artisan-browse/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/joshembling/artisan-browse.svg?style=flat-square)](https://packagist.org/packages/joshembling/artisan-browse)
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
 
-## Support us
+🔎 Artisan Browse provides an interactive terminal UI for discovering, searching, and executing all Laravel Artisan commands. Instead of having to remember command names, their arguments and flags, you can interactively browse available commands, search by name or description, and be prompted for required arguments and optional flags. 
 
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/artisan-browse.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/artisan-browse)
+This is perfect for any devs who want immediate command discovery and execution without having to search the docs, source dive or google furiously to find the right command. 💪
 
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
+## Features
 
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
+- **Interactive Command Search** - Searchable list of all available Artisan commands with descriptions
+- **Smart Filtering** - Filter by command namespace or search across command names and descriptions
+- **Interactive Arguments & Options** - Using Laravel Prompts, this guides you through required arguments and optional flags
+- **Command Preview** - See the exact command that will be executed before confirming
+- **Configurable Behavior** - Customise blacklists, scroll behavior, search options, and more
+- **Auto-Execute Option** - Skip confirmation and run commands immediately if desired
 
 ## Installation
 
@@ -23,38 +27,60 @@ You can install the package via composer:
 composer require joshembling/artisan-browse
 ```
 
-You can publish and run the migrations with:
-
-```bash
-php artisan vendor:publish --tag="artisan-browse-migrations"
-php artisan migrate
-```
-
 You can publish the config file with:
 
 ```bash
 php artisan vendor:publish --tag="artisan-browse-config"
 ```
 
-This is the contents of the published config file:
+## Usage
+
+Run the interactive browser:
+
+```bash
+php artisan browse
+```
+
+Filter by namespace:
+
+```bash
+php artisan browse make
+```
+
+This will show only commands starting with `make:`, like `make:model`, `make:controller`, etc.
+
+### Configuration
+
+Publish the config file and customise the following options:
 
 ```php
 return [
+    // Commands to exclude from the browse list
+    'blacklist_commands' => [
+        // 'horizon', 'octane', 'sail'
+    ],
+
+    // Number of commands to show before enabling scroll
+    'select_command_scroll' => 50,
+
+    // Number of options to show before enabling scroll
+    'select_options_scroll' => 20,
+
+    // Show command preview before confirmation
+    'show_command_preview' => true,
+
+    // Search commands by name and description
+    'search_descriptions' => true,
+
+    // Auto-execute without confirmation prompt
+    'auto_execute' => false,
+
+    // Options to skip when collecting input
+    'skip_options' => [
+        'help', 'quiet', 'verbose', 'version', 'ansi', 
+        'no-ansi', 'no-interaction', 'env', 'silent'
+    ],
 ];
-```
-
-Optionally, you can publish the views using
-
-```bash
-php artisan vendor:publish --tag="artisan-browse-views"
-```
-
-## Usage
-
-```php
-$artisanBrowse = new JoshEmbling\ArtisanBrowse();
-echo $artisanBrowse->echoPhrase('Hello, JoshEmbling!');
-```
 
 ## Testing
 
