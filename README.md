@@ -29,8 +29,8 @@ This is a perfect, lightweight tool for any Laravel dev that wants immediate com
 
 | PHP Version | Laravel Version |
 |-------------|-----------------|
-| 8.2+        | 11.x            |
-| 8.2+        | 12.x            |
+| 8.3+        | 11.x            |
+| 8.3+        | 12.x            |
 
 ## Features
 
