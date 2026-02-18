@@ -18,7 +18,7 @@ class ArtisanBrowseServiceProvider extends PackageServiceProvider
          */
         $package
             ->name('artisan-browse')
-            ->hasConfigFile()
+            ->hasConfigFile('artisan-browse')
             ->hasCommand(ArtisanBrowseCommand::class)
             ->hasInstallCommand(function (InstallCommand $command) {
                 $command

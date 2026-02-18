@@ -3,6 +3,8 @@
 namespace JoshEmbling\ArtisanBrowse\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\error;
@@ -15,93 +17,103 @@ class ArtisanBrowseCommand extends Command
 {
     protected $signature = 'browse {namespace? : Optional namespace or command prefix to filter by}';
 
-    protected $description = 'Interactively browse and run Artisan commands';
+    protected $description = 'An interactive terminal UI for browsing, searching, and executing Laravel Artisan commands.';
 
-    /**
-     * Commands that are interactive themselves or otherwise unsafe to proxy.
-     */
-    protected array $skipCommands = [
-        // 'tinker',
-        // 'tenant:tinker',
-        // 'db',
-        // 'browse',
-        // 'pail',
-        // 'queue:work',
-        // 'queue:listen',
-        // 'schedule:work',
-        // 'boost:mcp',
-        // 'mcp:start',
-        // 'vapor:handle',
-        // 'completion',
-    ];
-
-    protected array $blacklistCommands = [
-        // 'horizon',
-        // 'octane',
-        // 'sail',
-    ];
+    private array $blacklistCommands = [];
 
     public function handle(): int
     {
+        $this->blacklistCommands = config('artisan-browse.blacklist_commands', []);
+
         $namespaceFilter = $this->argument('namespace');
 
         $commands = $this->getFilteredCommands($namespaceFilter);
 
         if (empty($commands)) {
-            warning('No commands found'.($namespaceFilter ? " matching '{$namespaceFilter}'" : '').'.');
+            warning('No commands found' . ($namespaceFilter ? " matching '{$namespaceFilter}'" : '') . '.');
 
             return self::FAILURE;
         }
 
-        // Build the searchable list with styled labels.
-        // Array keys are plain command names (used for execution).
-        // Array values are ANSI-styled strings (used for display).
-        $commandMap = [];
-        foreach ($commands as $name => $command) {
-            $description = $command->getDescription();
+        $commandMap = $this->buildCommandMap($commands);
 
-            if (str_contains($name, ':')) {
-                [$ns, $cmd] = explode(':', $name, 2);
-                $styledName = "\e[93m{$ns}:\e[32m{$cmd}".($description ? "\e[97m - {$description}" : '');
-            } else {
-                $styledName = "\e[32m{$name}".($description ? "\e[97m - {$description}" : '');
-            }
-
-            $commandMap[$name] = $styledName;
-        }
-
-        $selectedName = search(
-            label: 'Search and select a command'.($namespaceFilter ? " \e[2m(filtered: {$namespaceFilter})\e[0m" : ''),
-            options: function (string $query) use ($commandMap) {
-                if (empty($query)) {
-                    return $commandMap;
-                }
-
-                // Filter against plain command names, not the styled labels
-                return array_filter(
-                    $commandMap,
-                    fn ($label, $name) => str_contains(strtolower($name), strtolower($query)),
-                    ARRAY_FILTER_USE_BOTH
-                );
-            },
-            placeholder: 'Type to filter commands...',
-            scroll: 50,
-        );
+        $selectedName = $this->selectCommand($commandMap, $namespaceFilter);
 
         if (! $selectedName) {
             return self::SUCCESS;
         }
 
         $command = $commands[$selectedName];
+        $collectedArgs = $this->collectCommandArguments($command);
+        $collectedArgs = array_merge($collectedArgs, $this->collectCommandOptions($command));
 
-        // Check if this command is one we should skip
-        if (in_array($selectedName, $this->skipCommands)) {
-            warning("'{$selectedName}' is interactive or long-running. Run it directly instead.");
+        if (! $this->previewAndConfirmCommand($selectedName, $collectedArgs)) {
+            error('Aborted.');
 
-            return self::FAILURE;
+            return self::SUCCESS;
         }
 
-        // Introspect arguments and options
+        return $this->call($selectedName, $collectedArgs);
+    }
+
+    /**
+     * Build the searchable command map with styled labels.
+     * Array keys are plain command names (used for execution).
+     * Array values are ANSI-styled strings (used for display).
+     */
+    private function buildCommandMap(array $commands): array
+    {
+        $commandMap = [];
+
+        foreach ($commands as $name => $command) {
+            $commandMap[$name] = $this->getStyledCommandName($name, $command->getDescription());
+        }
+
+        return $commandMap;
+    }
+
+    /**
+     * Get the styled display name for a command.
+     */
+    private function getStyledCommandName(string $name, ?string $description): string
+    {
+        if (str_contains($name, ':')) {
+            [$ns, $cmd] = explode(':', $name, 2);
+            return "\e[93m{$ns}:\e[32m{$cmd}" . ($description ? "\e[97m - {$description}" : '');
+        }
+
+        return "\e[32m{$name}" . ($description ? "\e[97m - {$description}" : '');
+    }
+
+    /**
+     * Show the interactive search prompt and return the selected command name.
+     */
+    private function selectCommand(array $commandMap, ?string $namespaceFilter): ?string
+    {
+        return search(
+            label: 'Search and select a command' . ($namespaceFilter ? " \e[2m(filtered: {$namespaceFilter})\e[0m" : ''),
+            options: function (string $query) use ($commandMap) {
+                if (empty($query)) {
+                    return $commandMap;
+                }
+
+                $queryLower = Str::lower($query);
+
+                return Arr::where(
+                    $commandMap,
+                    fn($label, $name) => Str::contains(Str::lower($name), $queryLower) || Str::contains(Str::lower($label), $queryLower)
+                );
+            },
+            placeholder: 'Type to filter commands...',
+            scroll: 50,
+        );
+    }
+
+    /**
+     * Collect values for all command arguments.
+     */
+    private function collectCommandArguments(Command $command): array
+    {
         $definition = $command->getDefinition();
         $collectedArgs = [];
 
@@ -113,7 +125,7 @@ class ArtisanBrowseCommand extends Command
 
             $required = $arg->isRequired();
             $default = $arg->getDefault();
-            $label = $arg->getName().($arg->getDescription() ? " ({$arg->getDescription()})" : '');
+            $label = $arg->getName() . ($arg->getDescription() ? " ({$arg->getDescription()})" : '');
 
             if (! $required) {
                 $label = "[optional] {$label}";
@@ -130,53 +142,74 @@ class ArtisanBrowseCommand extends Command
             }
         }
 
-        // Handle options — only show non-default Symfony noise options
+        return $collectedArgs;
+    }
+
+    /**
+     * Collect values for all command options.
+     */
+    private function collectCommandOptions(Command $command): array
+    {
+        $definition = $command->getDefinition();
+        $collectedArgs = [];
+
+        // Options to skip — default Symfony noise options
         $skipOptions = ['help', 'quiet', 'verbose', 'version', 'ansi', 'no-ansi', 'no-interaction', 'env', 'silent'];
-        $options = array_filter(
+        $options = Arr::where(
             $definition->getOptions(),
-            fn ($opt) => ! in_array($opt->getName(), $skipOptions)
+            fn($opt) => ! in_array($opt->getName(), $skipOptions)
         );
 
-        if (! empty($options)) {
-            // Build a labelled list for multiselect
-            $optionChoices = [];
-            foreach ($options as $opt) {
-                $flag = $opt->acceptValue() ? '--'.$opt->getName().'=' : '--'.$opt->getName();
-                $label = $opt->getDescription() ? "{$flag}  \e[90m{$opt->getDescription()}\e[0m" : $flag;
-                $optionChoices[$opt->getName()] = $label;
-            }
+        if (empty($options)) {
+            return $collectedArgs;
+        }
 
-            $selectedOptions = \Laravel\Prompts\multiselect(
-                label: 'Select options to set (space to select, enter to confirm)',
-                options: $optionChoices,
-                default: [],
-                required: false,
-                scroll: 20,
-            );
+        // Build a labelled list for multiselect
+        $optionChoices = [];
+        foreach ($options as $opt) {
+            $flag = $opt->acceptValue() ? '--' . $opt->getName() . '=' : '--' . $opt->getName();
+            $label = $opt->getDescription() ? "{$flag}  \e[90m{$opt->getDescription()}\e[0m" : $flag;
+            $optionChoices[$opt->getName()] = $label;
+        }
 
-            foreach ($selectedOptions as $optName) {
-                $opt = $options[$optName];
-                $optDesc = $opt->getDescription();
-                $default = $opt->getDefault();
+        $selectedOptions = \Laravel\Prompts\multiselect(
+            label: 'Select options to set (space to select, enter to confirm)',
+            options: $optionChoices,
+            default: [],
+            required: false,
+            scroll: 20,
+        );
 
-                if (! $opt->acceptValue()) {
-                    // Boolean flag — selected means enabled
-                    $collectedArgs["--{$optName}"] = true;
-                } else {
-                    $value = text(
-                        label: "--{$optName}".($optDesc ? ": {$optDesc}" : ''),
-                        default: is_string($default) ? $default : '',
-                        required: false,
-                    );
-                    if ($value !== '') {
-                        $collectedArgs["--{$optName}"] = $value;
-                    }
+        foreach ($selectedOptions as $optName) {
+            $opt = $options[$optName];
+            $optDesc = $opt->getDescription();
+            $default = $opt->getDefault();
+
+            if (! $opt->acceptValue()) {
+                // Boolean flag — selected means enabled
+                $collectedArgs["--{$optName}"] = true;
+            } else {
+                $value = text(
+                    label: "--{$optName}" . ($optDesc ? ": {$optDesc}" : ''),
+                    default: is_string($default) ? $default : '',
+                    required: false,
+                );
+                if ($value !== '') {
+                    $collectedArgs["--{$optName}"] = $value;
                 }
             }
         }
 
-        // Preview and confirm
-        $preview = $selectedName;
+        return $collectedArgs;
+    }
+
+    /**
+     * Preview the command and ask for confirmation before execution.
+     */
+    private function previewAndConfirmCommand(string $commandName, array $collectedArgs): bool
+    {
+        $preview = $commandName;
+
         foreach ($collectedArgs as $key => $val) {
             if ($val === true) {
                 $preview .= " {$key}";
@@ -189,40 +222,31 @@ class ArtisanBrowseCommand extends Command
 
         note("Running: php artisan {$preview}");
 
-        $confirmed = confirm('Execute this command?', default: true);
-
-        if (! $confirmed) {
-            error('Aborted.');
-
-            return self::SUCCESS;
-        }
-
-        return $this->call($selectedName, $collectedArgs);
+        return confirm('Execute this command?', default: true);
     }
 
     protected function getFilteredCommands(?string $namespaceFilter): array
     {
         $all = $this->getApplication()->all();
 
-        $commands = array_filter($all, function ($command, $name) {
+        $commands = Arr::where($all, function ($command, $name) {
             if ($command->isHidden() || $name === 'browse') {
                 return false;
             }
 
             foreach ($this->blacklistCommands as $blacklisted) {
-                if (str_starts_with($name, $blacklisted)) {
+                if (Str::startsWith($name, $blacklisted)) {
                     return false;
                 }
             }
 
             return true;
-        }, ARRAY_FILTER_USE_BOTH);
+        });
 
         if ($namespaceFilter) {
-            $commands = array_filter(
+            $commands = Arr::where(
                 $commands,
-                fn ($name) => str_starts_with($name, $namespaceFilter),
-                ARRAY_FILTER_USE_KEY
+                fn($command, $name) => Str::startsWith($name, $namespaceFilter)
             );
         }
 
