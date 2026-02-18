@@ -3,7 +3,6 @@
 ## An interactive terminal UI for browsing, searching, and executing Laravel Artisan commands.
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/joshembling/artisan-browse.svg?style=flat-square)](https://packagist.org/packages/joshembling/artisan-browse)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/joshembling/artisan-browse/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/joshembling/artisan-browse/actions?query=workflow%3Arun-tests+branch%3Amain)
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/joshembling/artisan-browse/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/joshembling/artisan-browse/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/joshembling/artisan-browse.svg?style=flat-square)](https://packagist.org/packages/joshembling/artisan-browse)
 
@@ -11,6 +10,28 @@
 🔎 Artisan Browse provides an interactive terminal UI for discovering, searching, and executing all Laravel Artisan commands. Instead of having to remember command names, their arguments and flags, you can interactively browse available commands, search by name or description, and be prompted for required arguments and optional flags. 
 
 This is perfect for any devs who want immediate command discovery and execution without having to search the docs, source dive or google furiously to find the right command. 💪
+
+## Table of Contents
+
+- [Version Support](#version-support)
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Configuration](#configuration)
+- [Demo](#demo)
+- [Testing](#testing)
+- [Changelog](#changelog)
+- [Contributing](#contributing)
+- [Security Vulnerabilities](#security-vulnerabilities)
+- [Credits](#credits)
+- [License](#license)
+
+## Version Support
+
+| PHP Version | Laravel Version |
+|-------------|-----------------|
+| 8.2+        | 11.x            |
+| 8.2+        | 12.x            |
 
 ## Features
 
@@ -20,6 +41,7 @@ This is perfect for any devs who want immediate command discovery and execution 
 - **Command Preview** - See the exact command that will be executed before confirming
 - **Configurable Behavior** - Customise blacklists, scroll behavior, search options, and more
 - **Auto-Execute Option** - Skip confirmation and run commands immediately if desired
+
 ## Installation
 
 You can install the package via composer:
