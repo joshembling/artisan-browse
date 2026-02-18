@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace JoshEmbling\ArtisanBrowse\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class ArtisanBrowseCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'artisan-browse';
 
     public $description = 'My command';
 
