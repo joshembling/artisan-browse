@@ -6,9 +6,9 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/joshembling/artisan-browse/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/joshembling/artisan-browse/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/joshembling/artisan-browse.svg?style=flat-square)](https://packagist.org/packages/joshembling/artisan-browse)
 
-🔎 Artisan Browse provides an interactive terminal UI for discovering, searching, and executing all Laravel Artisan commands. Instead of having to remember command names, their arguments and flags, you can interactively browse available commands, search by name or description, and be prompted for required arguments and optional flags. 
+🔎 Artisan Browse provides an interactive terminal UI for discovering, searching, and executing all Laravel artisan commands. Instead of having to memorise command names, their arguments and flags, you can  key through available commands, search by name or description, and be prompted for required args and options. 
 
-This is perfect for any devs who want immediate command discovery and execution without having to search the docs, source dive or google furiously to find the right command. 💪
+This is a perfect, lightweight tool for any Laravel dev that wants immediate command discovery and execution without having to search the docs, source dive or google furiously to find the right command. 💪
 
 ## Table of Contents
 
@@ -46,16 +46,10 @@ This is perfect for any devs who want immediate command discovery and execution 
 You can install the package via composer:
 
 ```bash
-composer require joshembling/artisan-browse
+composer require joshembling/artisan-browse --dev && php artisan artisan-browse:install
 ```
 
-Then run the package's install command:
-
-```bash
-php artisan artisan-browse:install
-```
-
-If you'd rather do it separately, you can publish the config file with:
+If you'd rather install the config file separately, you can publish the config file with:
 
 ```bash
 php artisan vendor:publish --tag="artisan-browse-config"

@@ -4,7 +4,12 @@
     "keywords": [
         "joshembling",
         "laravel",
-        "artisan-browse"
+        "artisan-browse",
+        "artisan",
+        "browse",
+        "terminal UI",
+        "Laravel commands",
+        "interactive CLI"
     ],
     "homepage": "https://github.com/joshembling/artisan-browse",
     "license": "MIT",
@@ -35,8 +40,7 @@
     },
     "autoload": {
         "psr-4": {
-            "JoshEmbling\\ArtisanBrowse\\": "src/",
-            "JoshEmbling\\ArtisanBrowse\\Database\\Factories\\": "database/factories/"
+            "JoshEmbling\\ArtisanBrowse\\": "src/"
         }
     },
     "autoload-dev": {
