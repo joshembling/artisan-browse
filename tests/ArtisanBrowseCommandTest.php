@@ -23,8 +23,10 @@ describe('ArtisanBrowseCommand', function () {
             $method = $reflection->getMethod('buildCommandMap');
 
             // Create a mock command
-            $mockCmd = new class extends Command {
+            $mockCmd = new class extends Command
+            {
                 protected $name = 'test:example';
+
                 protected $description = 'Test command';
 
                 public function getDescription(): string
@@ -45,8 +47,10 @@ describe('ArtisanBrowseCommand', function () {
             $reflection = new ReflectionClass($command);
             $method = $reflection->getMethod('buildCommandMap');
 
-            $mockCmd = new class extends Command {
+            $mockCmd = new class extends Command
+            {
                 protected $name = 'make:model';
+
                 protected $description = 'Create a new model class';
 
                 public function getDescription(): string
@@ -65,7 +69,8 @@ describe('ArtisanBrowseCommand', function () {
         it('collects arguments as array', function () {
             $command = resolve(ArtisanBrowseCommand::class);
 
-            $mockCmd = new class extends Command {
+            $mockCmd = new class extends Command
+            {
                 protected $name = 'test:cmd';
 
                 public function getDescription(): string
@@ -89,7 +94,8 @@ describe('ArtisanBrowseCommand', function () {
 
             $command = resolve(ArtisanBrowseCommand::class);
 
-            $mockCmd = new class extends Command {
+            $mockCmd = new class extends Command
+            {
                 protected $name = 'test:cmd';
 
                 public function getDescription(): string
@@ -109,7 +115,8 @@ describe('ArtisanBrowseCommand', function () {
         it('returns array from option collection', function () {
             $command = resolve(ArtisanBrowseCommand::class);
 
-            $mockCmd = new class extends Command {
+            $mockCmd = new class extends Command
+            {
                 protected $name = 'test:cmd';
 
                 public function getDescription(): string
