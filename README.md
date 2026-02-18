@@ -6,7 +6,6 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/joshembling/artisan-browse/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/joshembling/artisan-browse/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/joshembling/artisan-browse.svg?style=flat-square)](https://packagist.org/packages/joshembling/artisan-browse)
 
-
 🔎 Artisan Browse provides an interactive terminal UI for discovering, searching, and executing all Laravel Artisan commands. Instead of having to remember command names, their arguments and flags, you can interactively browse available commands, search by name or description, and be prompted for required arguments and optional flags. 
 
 This is perfect for any devs who want immediate command discovery and execution without having to search the docs, source dive or google furiously to find the right command. 💪
@@ -114,7 +113,7 @@ return [
 
 ## Demo 
 
-![Artisan Browse Demo](assets/artisan_browse.gif)
+![Artisan Browse Demo](https://github.com/user-attachments/assets/25faf452-a30f-46cd-a9e1-3db070d8ec29)
 
 ## Testing
 
