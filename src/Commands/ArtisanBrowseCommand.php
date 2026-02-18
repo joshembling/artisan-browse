@@ -107,7 +107,7 @@ class ArtisanBrowseCommand extends Command
                 );
             },
             placeholder: 'Type to filter commands...',
-            scroll: 50,
+            scroll: config('artisan-browse.select_command_scroll', 50),
         );
     }
 
@@ -179,7 +179,7 @@ class ArtisanBrowseCommand extends Command
             options: $optionChoices,
             default: [],
             required: false,
-            scroll: 20,
+            scroll: config('artisan-browse.select_options_scroll', 20),
         );
 
         foreach ($selectedOptions as $optName) {
