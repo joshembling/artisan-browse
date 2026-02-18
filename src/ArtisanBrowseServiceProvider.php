@@ -22,6 +22,7 @@ class ArtisanBrowseServiceProvider extends PackageServiceProvider
             ->hasCommand(ArtisanBrowseCommand::class)
             ->hasInstallCommand(function (InstallCommand $command) {
                 $command
+                    ->publishConfigFile()
                     ->askToStarRepoOnGitHub('joshembling/artisan-browse');
             });
     }
