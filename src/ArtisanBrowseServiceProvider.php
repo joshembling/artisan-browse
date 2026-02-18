@@ -2,9 +2,9 @@
 
 namespace JoshEmbling\ArtisanBrowse;
 
+use JoshEmbling\ArtisanBrowse\Commands\ArtisanBrowseCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use JoshEmbling\ArtisanBrowse\Commands\ArtisanBrowseCommand;
 
 class ArtisanBrowseServiceProvider extends PackageServiceProvider
 {
