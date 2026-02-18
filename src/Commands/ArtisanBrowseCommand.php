@@ -9,6 +9,7 @@ use function Laravel\Prompts\note;
 use function Laravel\Prompts\search;
 use function Laravel\Prompts\text;
 use function Laravel\Prompts\warning;
+use function Laravel\Prompts\confirm;
 
 class ArtisanBrowseCommand extends Command
 {
@@ -47,7 +48,7 @@ class ArtisanBrowseCommand extends Command
         $commands = $this->getFilteredCommands($namespaceFilter);
 
         if (empty($commands)) {
-            warning('No commands found'.($namespaceFilter ? " matching '{$namespaceFilter}'" : '').'.');
+            warning('No commands found' . ($namespaceFilter ? " matching '{$namespaceFilter}'" : '') . '.');
 
             return self::FAILURE;
         }
@@ -61,16 +62,16 @@ class ArtisanBrowseCommand extends Command
 
             if (str_contains($name, ':')) {
                 [$ns, $cmd] = explode(':', $name, 2);
-                $styledName = "\e[93m{$ns}:\e[32m{$cmd}".($description ? "\e[97m - {$description}" : '');
+                $styledName = "\e[93m{$ns}:\e[32m{$cmd}" . ($description ? "\e[97m - {$description}" : '');
             } else {
-                $styledName = "\e[32m{$name}".($description ? "\e[97m - {$description}" : '');
+                $styledName = "\e[32m{$name}" . ($description ? "\e[97m - {$description}" : '');
             }
 
             $commandMap[$name] = $styledName;
         }
 
         $selectedName = search(
-            label: 'Search and select a command'.($namespaceFilter ? " \e[2m(filtered: {$namespaceFilter})\e[0m" : ''),
+            label: 'Search and select a command' . ($namespaceFilter ? " \e[2m(filtered: {$namespaceFilter})\e[0m" : ''),
             options: function (string $query) use ($commandMap) {
                 if (empty($query)) {
                     return $commandMap;
@@ -79,7 +80,7 @@ class ArtisanBrowseCommand extends Command
                 // Filter against plain command names, not the styled labels
                 return array_filter(
                     $commandMap,
-                    fn ($label, $name) => str_contains(strtolower($name), strtolower($query)),
+                    fn($label, $name) => str_contains(strtolower($name), strtolower($query)),
                     ARRAY_FILTER_USE_BOTH
                 );
             },
@@ -112,7 +113,7 @@ class ArtisanBrowseCommand extends Command
 
             $required = $arg->isRequired();
             $default = $arg->getDefault();
-            $label = $arg->getName().($arg->getDescription() ? " ({$arg->getDescription()})" : '');
+            $label = $arg->getName() . ($arg->getDescription() ? " ({$arg->getDescription()})" : '');
 
             if (! $required) {
                 $label = "[optional] {$label}";
@@ -133,14 +134,14 @@ class ArtisanBrowseCommand extends Command
         $skipOptions = ['help', 'quiet', 'verbose', 'version', 'ansi', 'no-ansi', 'no-interaction', 'env', 'silent'];
         $options = array_filter(
             $definition->getOptions(),
-            fn ($opt) => ! in_array($opt->getName(), $skipOptions)
+            fn($opt) => ! in_array($opt->getName(), $skipOptions)
         );
 
         if (! empty($options)) {
             // Build a labelled list for multiselect
             $optionChoices = [];
             foreach ($options as $opt) {
-                $flag = $opt->acceptValue() ? '--'.$opt->getName().'=' : '--'.$opt->getName();
+                $flag = $opt->acceptValue() ? '--' . $opt->getName() . '=' : '--' . $opt->getName();
                 $label = $opt->getDescription() ? "{$flag}  \e[90m{$opt->getDescription()}\e[0m" : $flag;
                 $optionChoices[$opt->getName()] = $label;
             }
@@ -163,7 +164,7 @@ class ArtisanBrowseCommand extends Command
                     $collectedArgs["--{$optName}"] = true;
                 } else {
                     $value = text(
-                        label: "--{$optName}".($optDesc ? ": {$optDesc}" : ''),
+                        label: "--{$optName}" . ($optDesc ? ": {$optDesc}" : ''),
                         default: is_string($default) ? $default : '',
                         required: false,
                     );
@@ -220,7 +221,7 @@ class ArtisanBrowseCommand extends Command
         if ($namespaceFilter) {
             $commands = array_filter(
                 $commands,
-                fn ($name) => str_starts_with($name, $namespaceFilter),
+                fn($name) => str_starts_with($name, $namespaceFilter),
                 ARRAY_FILTER_USE_KEY
             );
         }
