@@ -2,9 +2,10 @@
 
 namespace JoshEmbling\ArtisanBrowse;
 
-use JoshEmbling\ArtisanBrowse\Commands\ArtisanBrowseCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
+use JoshEmbling\ArtisanBrowse\Commands\ArtisanBrowseCommand;
+use Spatie\LaravelPackageTools\Commands\InstallCommand;
 
 class ArtisanBrowseServiceProvider extends PackageServiceProvider
 {
@@ -18,8 +19,10 @@ class ArtisanBrowseServiceProvider extends PackageServiceProvider
         $package
             ->name('artisan-browse')
             ->hasConfigFile()
-            ->hasViews()
-            ->hasMigration('create_artisan_browse_table')
-            ->hasCommand(ArtisanBrowseCommand::class);
+            ->hasCommand(ArtisanBrowseCommand::class)
+            ->hasInstallCommand(function (InstallCommand $command) {
+                $command
+                    ->askToStarRepoOnGitHub('joshembling/artisan-browse');
+            });
     }
 }
