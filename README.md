@@ -50,11 +50,6 @@ php artisan browse make
 
 This will show only commands starting with `make:`, like `make:model`, `make:controller`, etc.
 
-## Demo 
-
-![Artisan Browse Demo](assets/artisan_browse.gif)
-
-
 ### Configuration
 
 Publish the config file and customise the following options:
@@ -87,6 +82,10 @@ return [
         'no-ansi', 'no-interaction', 'env', 'silent'
     ],
 ];
+
+## Demo 
+
+![Artisan Browse Demo](assets/artisan_browse.gif)
 
 ## Testing
 
