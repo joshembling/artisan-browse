@@ -2,6 +2,10 @@
 
 All notable changes to `artisan-browse` will be documented in this file.
 
+## v0.0.6 - 2026-02-18
+
+**Full Changelog**: https://github.com/joshembling/artisan-browse/compare/v0.0.5...v0.0.6
+
 ## v0.0.5 - 2026-02-18
 
 **Full Changelog**: https://github.com/joshembling/artisan-browse/compare/v0.0.4...v0.0.5
