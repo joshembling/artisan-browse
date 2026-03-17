@@ -31,6 +31,7 @@ This is a perfect, lightweight tool for any Laravel dev that wants immediate com
 |-------------|-----------------|
 | 8.3+        | 11.x            |
 | 8.3+        | 12.x            |
+| 8.3+        | 13.x            |
 
 ## Features
 
